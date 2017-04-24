@@ -1,0 +1,71 @@
+---
+title: "Stock Analysis App: Pitch"
+author: "Subrata"
+date: "April 24, 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(plotly))
+```
+
+## Introduction
+
+Date of publication: **`r format(Sys.Date(), format="%B %d %Y")`** 
+
+As the stock market becomes more and more data rich, the scope for doing big data analytics on stocks to identify winning stocks becomes larger and larger.
+
+The Stock Analysis App will help to do extrapolatory technical analysis on dowjones weekly data for the period Jan 2011 to June 2011 on 30 stocks. We will look at the trends of these stocks for various parameters such as Closing Price, Low Price, volume etc for the period and arrive at recommendation on which stock to buy purely on technical analysis to reap maximum gains.
+
+Data Source: https://archive.ics.uci.edu/ml/datasets/Dow+Jones+Index
+
+
+## The Main Panel shows trends on Key metrics (1/2)
+
+Stock: IBM | Trends can be seen for parameters such as Closing Price, Low Price, High Price, volume, Opening Price ...
+
+```{r MainPanel1, echo=FALSE, warning=FALSE, message=FALSE}
+source("./StockAnalysis_v3.R")
+
+plot_ly(database[database$stock=="IBM",], x = ~weeklyindex, y = ~ClosingStockPrice,type = "scatter",mode="lines")
+
+```
+
+
+## The Main Panel shows trends on Key metrics (2/2)
+
+Stock: IBM | ... % change in volume and % change in next week's price
+
+```{r MainPanel2, echo=FALSE, warning=FALSE, message=FALSE}
+
+plot_ly(database[database$stock=="IBM",], x = ~weeklyindex, y = ~percent_change_volume_over_last_wk,type = "scatter",mode="lines")
+
+```
+
+
+## The Side Panel shows the Technical Metrics
+
+For the selected stock, Technical metrics such as **20 day moving average, Long term moving average, volatility, short term liquidity indicator** and **short term reversal indicator** are shown. The app ultimately recommends whether or not once should consider buying or selling a stock based on these technical metrics.
+
+These three stocks are recommended as "Buy" based on technical parameters:
+
+```{r SidePanel, echo=FALSE, warning=FALSE, message=FALSE, size='tiny', comment=""}
+names(NewTrainDatabase)<-c("20dayMAvg","LongMAvg","Price","STMR","STL","Volatility","Stock","Buy_Sell")
+NewTrainDatabase[NewTrainDatabase$Buy_Sell=="Buy",c(7,8,1,2,3,6)]
+```
+
+## Conclusion
+
+The predictions from the algorithm seemed to make sense if we observe from a one year time horizon. IBM price went up to ~ 210 USD in 2012, while MCD went upto ~100 USD in 2012 and UTX remained in the range 80 - 90 USD in 2012.
+
+The app has huge scope to improve, a few being:
+
+1) *Linkage to real time database*
+
+2) *Enhance technical metrics list*
+
+3) *Improve recommendation algorithm to increase accuracy of prediction factoring in fundamental analysis* 
+
+Thanks for your time!
